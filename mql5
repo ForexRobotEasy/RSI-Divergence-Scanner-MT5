@@ -1,0 +1,122 @@
+
+//+------------------------------------------------------------------+
+//|                                                       RSI Divergence Scanner MT5 |
+//|                                   Copyright © 2022, Forex Robot Easy Team |
+//|                                      Website: forexroboteasy.com |
+//+------------------------------------------------------------------+
+
+// Include necessary libraries
+#include <Trade\Trade.mqh>
+#include <Indicator\RSI\RSI.mqh>
+
+// Define constants
+#define SYMBOLS_COUNT 10 // Maximum number of symbols to scan
+#define TIMEFRAMES_COUNT 4 // Maximum number of timeframes to scan
+
+//+------------------------------------------------------------------+
+//| Global variables                                                  |
+//+------------------------------------------------------------------+
+string g_symbols[SYMBOLS_COUNT] = {'EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'NZDUSD', 'USDCAD', 'USDCHF', 'EURJPY', 'GBPJPY', 'AUDJPY'};
+ENUM_TIMEFRAMES g_timeframes[TIMEFRAMES_COUNT] = {PERIOD_M5, PERIOD_M15, PERIOD_H1, PERIOD_H4};
+int g_currentSymbol = 0;
+int g_currentTimeframe = 0;
+bool g_isScanning = false;
+
+//+------------------------------------------------------------------+
+//| Custom indicator initialization function                           |
+//+------------------------------------------------------------------+
+int OnInit()
+{
+    // Initialize the trade module
+    if (!TradeInit())
+    {
+        Print('Trade module initialization failed!');
+        return INIT_FAILED;
+    }
+
+    return INIT_SUCCEEDED;
+}
+
+//+------------------------------------------------------------------+
+//| Custom indicator deinitialization function                         |
+//+------------------------------------------------------------------+
+void OnDeinit(const int reason)
+{
+    // Deinitialize the trade module
+    TradeDeinit();
+}
+
+//+------------------------------------------------------------------+
+//| Custom indicator start function                                    |
+//+------------------------------------------------------------------+
+void OnStart()
+{
+    if (g_isScanning)
+        return;
+
+    g_isScanning = true;
+
+    // Loop through all symbols
+    for (int i = 0; i < SYMBOLS_COUNT; i++)
+    {
+        g_currentSymbol = i;
+
+        // Loop through all timeframes
+        for (int j = 0; j < TIMEFRAMES_COUNT; j++)
+        {
+            g_currentTimeframe = j;
+
+            // Check for regular divergence
+            if (CheckRegularDivergence(g_symbols[i], g_timeframes[j]))
+            {
+                // Place a trade or generate a signal for trend reversal based on regular divergence
+                TradeSignal(g_symbols[i], g_timeframes[j], 'Regular Divergence');
+            }
+
+            // Check for hidden divergence
+            if (CheckHiddenDivergence(g_symbols[i], g_timeframes[j]))
+            {
+                // Place a trade or generate a signal for trend reversal based on hidden divergence
+                TradeSignal(g_symbols[i], g_timeframes[j], 'Hidden Divergence');
+            }
+        }
+    }
+
+    g_isScanning = false;
+}
+
+//+------------------------------------------------------------------+
+//| Function to check for regular divergence                          |
+//+------------------------------------------------------------------+
+bool CheckRegularDivergence(const string symbol, const ENUM_TIMEFRAMES timeframe)
+{
+    // Implement logic to check for regular divergence between price chart and RSI indicator
+    // Return true if regular divergence is found, otherwise return false
+    // Add necessary comments to explain the logic of divergence checking
+
+    return false; // Placeholder return value
+}
+
+//+------------------------------------------------------------------+
+//| Function to check for hidden divergence                           |
+//+------------------------------------------------------------------+
+bool CheckHiddenDivergence(const string symbol, const ENUM_TIMEFRAMES timeframe)
+{
+    // Implement logic to check for hidden divergence between price chart and RSI indicator
+    // Return true if hidden divergence is found, otherwise return false
+    // Add necessary comments to explain the logic of divergence checking
+
+    return false; // Placeholder return value
+}
+
+//+------------------------------------------------------------------+
+//| Function to place a trade or generate a signal for trend reversal  |
+//+------------------------------------------------------------------+
+void TradeSignal(const string symbol, const ENUM_TIMEFRAMES timeframe, const string divergenceType)
+{
+    // Implement logic to place a trade or generate a signal for trend reversal based on divergence
+    // Use necessary trading functions from the Trade module
+    // Display the trade or signal on the scanner dashboard
+    // Add necessary comments to explain the trade/signal generation logic
+}
+
